@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
         txtPath = findViewById(R.id.txtPath);
 
         //initDatas
+        TakePhotoUtil.DEFAULT_QUALITY = 90;     //图片质量
+        TakePhotoUtil.DEFAULT_SIZE = 900;       //最大大小（KB）
+
         TakePhotoUtil.getInstance(MainActivity.this).setReturnPhoto(new TakePhotoUtil.ReturnPhoto() {
             @Override
             public void onGetPhoto(String path, Bitmap bitmap) {

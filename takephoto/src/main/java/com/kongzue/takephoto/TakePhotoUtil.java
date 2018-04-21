@@ -34,8 +34,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class TakePhotoUtil {
 
-    public static final int DEFAULT_SIZE = 800;         //图片最大体积（KB）
-    public static final int DEFAULT_QUALITY = 80;       //图片质量
+    public static int DEFAULT_SIZE = 800;         //图片最大体积（KB）
+    public static int DEFAULT_QUALITY = 80;       //图片质量
 
     private String[] permissions;
     private AppCompatActivity context;
@@ -270,7 +270,7 @@ public class TakePhotoUtil {
     }
 
     //权限处理
-    public boolean checkPermissions(String[] permissions) {
+    private boolean checkPermissions(String[] permissions) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
@@ -284,7 +284,7 @@ public class TakePhotoUtil {
         return true;
     }
 
-    public void requestPermission(String[] permissions, int requestCode) {
+    private void requestPermission(String[] permissions, int requestCode) {
         this.REQUEST_CODE_PERMISSION = requestCode;
         if (checkPermissions(permissions)) {
             permissionSuccess(REQUEST_CODE_PERMISSION);
@@ -294,7 +294,7 @@ public class TakePhotoUtil {
         }
     }
 
-    public void permissionSuccess(int requestCode) {
+    private void permissionSuccess(int requestCode) {
         Log.d(">>>", "获取权限成功=" + requestCode);
     }
 
