@@ -85,5 +85,5 @@ TakePhotoUtil.DEFAULT_SIZE = 900;
 
 引入方法：
 ```
-正在上传jCenter...
+implementation 'com.kongzue.takephoto:takephoto:1.0.0'
 ```
