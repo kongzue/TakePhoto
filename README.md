@@ -1,6 +1,19 @@
 # KongzueTakePhoto
 Kongzue APP拍照&相册选择工具
 
+<a href="https://github.com/kongzue/TakePhoto/">
+<img src="https://img.shields.io/badge/Kongzue%20Take%20Photo-1.0.0-green.svg" alt="Kongzue TakePhoto">
+</a> 
+<a href="https://bintray.com/myzchh/maven/TakePhoto">
+<img src="https://img.shields.io/badge/Maven-1.0.0-blue.svg" alt="Maven">
+</a> 
+<a href="http://www.apache.org/licenses/LICENSE-2.0">
+<img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="Maven">
+</a> 
+<a href="http://www.kongzue.com">
+<img src="https://img.shields.io/badge/Homepage-Kongzue.com-brightgreen.svg" alt="Maven">
+</a> 
+
 ### 更新日志：
 暂无
 
