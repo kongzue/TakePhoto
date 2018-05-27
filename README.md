@@ -14,13 +14,24 @@ Kongzue APP拍照&相册选择工具
 <img src="https://img.shields.io/badge/Homepage-Kongzue.com-brightgreen.svg" alt="Maven">
 </a>
 
-### 更新日志：
-v2.0.0：
-- 更换了图片压缩框架；
-- Android Support 支持库升级到 27.1.0；
+### 引入TakePhoto到您的项目
 
-v1.0:
-- 全新发布
+引入方法：
+
+Maven：
+```
+<dependency>
+  <groupId>com.kongzue.takephoto</groupId>
+  <artifactId>takephoto</artifactId>
+  <version>2.0.0</version>
+  <type>pom</type>
+</dependency>
+```
+
+Gradle：
+```
+implementation 'com.kongzue.takephoto:takephoto:2.0.0'
+```
 
 ### 说明
 1) 在 Android 6.0 以上会自动申请权限，但依然需要您在您的项目中预先声明相机权限和存储读取、写入权限。申请权限的步骤会自动进行。因申请权限需要，您在调用本工具的 Activity 必须是继承自 AppCompatActivity 的，本工具采用单例方式进行使用，在 getInstance() 时必须传入 Activity extends AppCompatActivity.
@@ -94,7 +105,7 @@ TakePhotoUtil.getInstance(MainActivity.this).doOpenGallery();
 ```
 
 ### 其他
-调整 Tiny 压缩选项：
+调整图片压缩选项：
 
 ```
 //初始化
@@ -104,21 +115,10 @@ TakePhotoUtil.DEFAULT_MAX_HEIGHT = 1080;                            //压缩框�
 TakePhotoUtil.DEFAULT_PIC_TYPE = Bitmap.CompressFormat.JPEG;        //压缩框架：默认压缩格式
 ```
 
-### 引入TakePhoto到您的项目
+### 更新日志：
+v2.0.0：
+- 更换了图片压缩框架；
+- Android Support 支持库升级到 27.1.0；
 
-引入方法：
-
-Maven：
-```
-<dependency>
-  <groupId>com.kongzue.takephoto</groupId>
-  <artifactId>takephoto</artifactId>
-  <version>2.0.0</version>
-  <type>pom</type>
-</dependency>
-```
-
-Gradle：
-```
-implementation 'com.kongzue.takephoto:takephoto:2.0.0'
-```
+v1.0:
+- 全新发布
