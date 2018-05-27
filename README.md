@@ -115,5 +115,5 @@ Maven：
 
 Gradle：
 ```
-compile 'com.kongzue.takephoto:takephoto:2.0.0'
+implementation 'com.kongzue.takephoto:takephoto:2.0.0'
 ```
