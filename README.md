@@ -15,7 +15,12 @@ Kongzue APP拍照&相册选择工具
 </a>
 
 ### 更新日志：
-暂无
+v2.0.0：
+- 更换了图片压缩框架；
+- Android Support 支持库升级到 27.1.0；
+
+v1.0:
+- 全新发布
 
 ### 说明
 1) 在 Android 6.0 以上会自动申请权限，但依然需要您在您的项目中预先声明相机权限和存储读取、写入权限。申请权限的步骤会自动进行。因申请权限需要，您在调用本工具的 Activity 必须是继承自 AppCompatActivity 的，本工具采用单例方式进行使用，在 getInstance() 时必须传入 Activity extends AppCompatActivity.
