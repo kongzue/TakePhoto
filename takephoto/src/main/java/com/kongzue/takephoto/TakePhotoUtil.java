@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -20,8 +21,7 @@ import com.kongzue.takephoto.util.imagechooser.api.ChosenImage;
 import com.kongzue.takephoto.util.imagechooser.api.ChosenImages;
 import com.kongzue.takephoto.util.imagechooser.api.ImageChooserListener;
 import com.kongzue.takephoto.util.imagechooser.api.ImageChooserManager;
-import com.zxy.tiny.Tiny;
-import com.zxy.tiny.callback.FileCallback;
+import com.nanchen.compresshelper.CompressHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,8 +34,10 @@ import static android.app.Activity.RESULT_OK;
 
 public class TakePhotoUtil {
 
-    public static int DEFAULT_SIZE = 800;         //图片最大体积（KB）
-    public static int DEFAULT_QUALITY = 80;       //图片质量
+    public static int DEFAULT_QUALITY = 80;             //图片质量
+    public static int DEFAULT_MAX_WIDTH = 1080;         //图片最大宽度
+    public static int DEFAULT_MAX_HEIGHT = 1080;        //图片最大高度
+    public static Bitmap.CompressFormat DEFAULT_PIC_TYPE = Bitmap.CompressFormat.JPEG;        //图片默认压缩格式
 
     private String[] permissions;
     private AppCompatActivity context;
@@ -111,22 +113,18 @@ public class TakePhotoUtil {
                 if (image != null) {
                     Log.i("选择图像", "Chosen Image:" + originalFilePath);
 
-                    Tiny.FileCompressOptions options = new Tiny.FileCompressOptions();
-                    options.quality = DEFAULT_QUALITY;
-                    options.size = DEFAULT_SIZE;
-                    Tiny.getInstance().source(originalFilePath).asFile().withOptions(options).compress(new FileCallback() {
-                        @Override
-                        public void callback(boolean isSuccess, String outfile, Throwable t) {
-                            if (isSuccess) {
-                                log("outfile:" + outfile);
-                                if (returnPhoto != null)
-                                    returnPhoto.onGetPhoto(outfile, getBitmapFromUri(outfile));
-
-                            } else {
-                                if (returnPhoto != null) returnPhoto.onError(new Exception(t));
-                            }
-                        }
-                    });
+                    File newFile = new CompressHelper.Builder(context)
+                            .setMaxWidth(DEFAULT_MAX_WIDTH)
+                            .setMaxHeight(DEFAULT_MAX_HEIGHT)
+                            .setQuality(DEFAULT_QUALITY)
+                            .setCompressFormat(DEFAULT_PIC_TYPE) // 设置默认压缩为jpg格式
+                            .setDestinationDirectoryPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath())
+                            .build()
+                            .compressToFile(new File(originalFilePath));
+                    String outfile = newFile.getAbsolutePath();
+                    log("outfile:" + outfile);
+                    if (returnPhoto != null)
+                        returnPhoto.onGetPhoto(outfile, getBitmapFromUri(outfile));
                 } else {
                     Log.i("未选择图像", "Chosen Image: Is null");
                 }
@@ -196,27 +194,25 @@ public class TakePhotoUtil {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case CODE_TAKE_PICTURE:
-                log("gfsgs");
                 log("resultCode:" + resultCode);
                 if (resultCode == RESULT_OK) {
 //                    log(">>>拍照：" + imageUri);
                     try {
-                        Tiny.FileCompressOptions options = new Tiny.FileCompressOptions();
-                        options.quality = DEFAULT_QUALITY;
-                        options.size = DEFAULT_SIZE;
-                        Tiny.getInstance().source(mTmpFile).asFile().withOptions(options).compress(new FileCallback() {
-                            @Override
-                            public void callback(boolean isSuccess, String outfile, Throwable t) {
-                                //return the compressed file path
-                                if (isSuccess) {
-                                    log("outfile:" + outfile);
-                                    if (returnPhoto != null)
-                                        returnPhoto.onGetPhoto(outfile, getBitmapFromUri(outfile));
-                                } else {
-                                    if (returnPhoto != null) returnPhoto.onError(new Exception(t));
-                                }
-                            }
-                        });
+
+                        File newFile = new CompressHelper.Builder(context)
+                                .setMaxWidth(DEFAULT_MAX_WIDTH)
+                                .setMaxHeight(DEFAULT_MAX_HEIGHT)
+                                .setQuality(DEFAULT_QUALITY)
+                                .setCompressFormat(DEFAULT_PIC_TYPE)
+                                .setDestinationDirectoryPath(Environment.getExternalStoragePublicDirectory(
+                                        Environment.DIRECTORY_PICTURES).getAbsolutePath())
+                                .build()
+                                .compressToFile(mTmpFile);
+                        String outfile = newFile.getAbsolutePath();
+
+                        log("outfile:" + outfile);
+                        if (returnPhoto != null)
+                            returnPhoto.onGetPhoto(outfile, getBitmapFromUri(outfile));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

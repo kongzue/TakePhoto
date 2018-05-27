@@ -1,13 +1,26 @@
 # KongzueTakePhoto
 Kongzue APP拍照&相册选择工具
 
+<a href="https://github.com/kongzue/KongzueTakePhoto/">
+<img src="https://img.shields.io/badge/KongzueTakePhoto-2.0.0-green.svg" alt="Kongzue TakePhoto">
+</a>
+<a href="https://bintray.com/myzchh/maven/TakePhoto/2.0.0/link">
+<img src="https://img.shields.io/badge/Maven-2.0.0-blue.svg" alt="Maven">
+</a>
+<a href="http://www.apache.org/licenses/LICENSE-2.0">
+<img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="Maven">
+</a>
+<a href="http://www.kongzue.com">
+<img src="https://img.shields.io/badge/Homepage-Kongzue.com-brightgreen.svg" alt="Maven">
+</a>
+
 ### 更新日志：
 暂无
 
 ### 说明
 1) 在 Android 6.0 以上会自动申请权限，但依然需要您在您的项目中预先声明相机权限和存储读取、写入权限。申请权限的步骤会自动进行。因申请权限需要，您在调用本工具的 Activity 必须是继承自 AppCompatActivity 的，本工具采用单例方式进行使用，在 getInstance() 时必须传入 Activity extends AppCompatActivity.
 2) 本工具仅提供默认的单图片拍摄以及相册中的单图片选择功能。
-3) 本工具默认集成图片压缩的 Tiny 框架（ https://github.com/Sunzxyong/Tiny ） 感谢 @Sunzxyong 开源做出的贡献。
+3) 本工具默认集成图片压缩的 CompressHelper 框架（ https://github.com/nanchen2251/CompressHelper ） 感谢 @nanchen2251 开源做出的贡献。
 4) 本工具已经处理在 Android 7.0 以上时系统禁止 APP 互相传输 Uri 可能导致的无法正常调用相机拍摄照片存储在指定目录的问题。请勿担心此问题放心使用。
 5) 本工具需要您提供的参数对照表如下：
 
@@ -15,8 +28,10 @@ Kongzue APP拍照&相册选择工具
 
 属性 | 含义 | 说明
 ---|---|---
-DEFAULT_SIZE | 图片最大体积限制（KB） | 可选，默认值800（KB）
 DEFAULT_QUALITY | 图片质量 | 可选，默认值80（%）
+DEFAULT_MAX_WIDTH | 图片最大宽度 | 可选
+DEFAULT_MAX_HEIGHT | 图片最大高度 | 可选
+DEFAULT_PIC_TYPE | 图片输出类型 | 可选（Bitmap.CompressFormat类型）
 
 功能相关：
 
@@ -77,13 +92,28 @@ TakePhotoUtil.getInstance(MainActivity.this).doOpenGallery();
 调整 Tiny 压缩选项：
 
 ```
-TakePhotoUtil.DEFAULT_QUALITY = 90;
-TakePhotoUtil.DEFAULT_SIZE = 900;
+//初始化
+TakePhotoUtil.DEFAULT_QUALITY = 90;                                 //压缩框架：图片质量
+TakePhotoUtil.DEFAULT_MAX_WIDTH = 1080;                             //压缩框架：图片最大宽度
+TakePhotoUtil.DEFAULT_MAX_HEIGHT = 1080;                            //压缩框架：图片最大高度
+TakePhotoUtil.DEFAULT_PIC_TYPE = Bitmap.CompressFormat.JPEG;        //压缩框架：默认压缩格式
 ```
 
 ### 引入TakePhoto到您的项目
 
 引入方法：
+
+Maven：
 ```
-正在上传jCenter...
+<dependency>
+  <groupId>com.kongzue.takephoto</groupId>
+  <artifactId>takephoto</artifactId>
+  <version>2.0.0</version>
+  <type>pom</type>
+</dependency>
+```
+
+Gradle：
+```
+compile 'com.kongzue.takephoto:takephoto:2.0.0'
 ```

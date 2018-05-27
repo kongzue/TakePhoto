@@ -30,10 +30,13 @@ public class MainActivity extends AppCompatActivity {
         imgPhoto = findViewById(R.id.imgPhoto);
         txtPath = findViewById(R.id.txtPath);
 
-        //initDatas
-        TakePhotoUtil.DEFAULT_QUALITY = 90;     //图片质量
-        TakePhotoUtil.DEFAULT_SIZE = 900;       //最大大小（KB）
+        //初始化
+        TakePhotoUtil.DEFAULT_QUALITY = 90;                                 //压缩框架：图片质量
+        TakePhotoUtil.DEFAULT_MAX_WIDTH = 1080;                             //压缩框架：图片最大宽度
+        TakePhotoUtil.DEFAULT_MAX_HEIGHT = 1080;                            //压缩框架：图片最大高度
+        TakePhotoUtil.DEFAULT_PIC_TYPE = Bitmap.CompressFormat.JPEG;        //压缩框架：默认压缩格式
 
+        //回调逻辑
         TakePhotoUtil.getInstance(MainActivity.this).setReturnPhoto(new TakePhotoUtil.ReturnPhoto() {
             @Override
             public void onGetPhoto(String path, Bitmap bitmap) {
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //setEvents
+        //执行方法
         btnTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
