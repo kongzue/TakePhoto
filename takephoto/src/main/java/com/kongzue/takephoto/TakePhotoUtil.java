@@ -21,7 +21,7 @@ import com.kongzue.takephoto.util.imagechooser.api.ChosenImage;
 import com.kongzue.takephoto.util.imagechooser.api.ChosenImages;
 import com.kongzue.takephoto.util.imagechooser.api.ImageChooserListener;
 import com.kongzue.takephoto.util.imagechooser.api.ImageChooserManager;
-import com.nanchen.compresshelper.CompressHelper;
+import com.kongzue.takephoto.util.imagezip.CompressHelper;
 
 import java.io.File;
 import java.io.IOException;

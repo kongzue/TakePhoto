@@ -2,10 +2,10 @@
 Kongzue APP拍照&相册选择工具
 
 <a href="https://github.com/kongzue/KongzueTakePhoto/">
-<img src="https://img.shields.io/badge/KongzueTakePhoto-2.0.0-green.svg" alt="Kongzue TakePhoto">
+<img src="https://img.shields.io/badge/KongzueTakePhoto-2.0.1-green.svg" alt="Kongzue TakePhoto">
 </a>
-<a href="https://bintray.com/myzchh/maven/TakePhoto/2.0.0/link">
-<img src="https://img.shields.io/badge/Maven-2.0.0-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/TakePhoto/2.0.1/link">
+<img src="https://img.shields.io/badge/Maven-2.0.1-blue.svg" alt="Maven">
 </a>
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="Maven">
@@ -23,14 +23,14 @@ Maven：
 <dependency>
   <groupId>com.kongzue.takephoto</groupId>
   <artifactId>takephoto</artifactId>
-  <version>2.0.0</version>
+  <version>2.0.1</version>
   <type>pom</type>
 </dependency>
 ```
 
 Gradle：
 ```
-implementation 'com.kongzue.takephoto:takephoto:2.0.0'
+implementation 'com.kongzue.takephoto:takephoto:2.0.1'
 ```
 
 ### 说明
@@ -39,6 +39,7 @@ implementation 'com.kongzue.takephoto:takephoto:2.0.0'
 3) 本工具默认集成图片压缩的 CompressHelper 框架（ https://github.com/nanchen2251/CompressHelper ） 感谢 @nanchen2251 开源做出的贡献。
 4) 本工具已经处理在 Android 7.0 以上时系统禁止 APP 互相传输 Uri 可能导致的无法正常调用相机拍摄照片存储在指定目录的问题。请勿担心此问题放心使用。
 5) 本工具需要您提供的参数对照表如下：
+6) 本框架中使用到的图像压缩框架是 @nanchen2251 的 CompressHelper: https://github.com/nanchen2251/CompressHelper 感谢他开源做的贡献。原压缩框架使用的开源协议为 Apache License 2.0，如要使用请遵守该协议。
 
 图片压缩相关：
 
@@ -115,7 +116,27 @@ TakePhotoUtil.DEFAULT_MAX_HEIGHT = 1080;                            //压缩框�
 TakePhotoUtil.DEFAULT_PIC_TYPE = Bitmap.CompressFormat.JPEG;        //压缩框架：默认压缩格式
 ```
 
+## 开源协议
+```
+   Copyright Kongzue KongzueTakePhoto
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+```
+
 ### 更新日志：
+v2.0.1：
+- 修复bug；
+
 v2.0.0：
 - 更换了图片压缩框架；
 - Android Support 支持库升级到 27.1.0；
