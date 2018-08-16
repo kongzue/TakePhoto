@@ -176,97 +176,99 @@ public abstract class MediaProcessorThread extends Thread {
 
     private String compressAndSaveImage(String fileImage, int scale) throws ChooserException {
 
-        FileOutputStream stream = null;
-        BufferedInputStream bstream = null;
-        Bitmap bitmap = null;
-        try {
-            Options optionsForGettingDimensions = new Options();
-            optionsForGettingDimensions.inJustDecodeBounds = true;
-            BufferedInputStream boundsOnlyStream = new BufferedInputStream(new FileInputStream(fileImage));
-            bitmap = BitmapFactory.decodeStream(boundsOnlyStream, null, optionsForGettingDimensions);
-            if (bitmap != null) {
-                bitmap.recycle();
-            }
-            if (boundsOnlyStream != null) {
-                boundsOnlyStream.close();
-            }
-            int w, l;
-            w = optionsForGettingDimensions.outWidth;
-            l = optionsForGettingDimensions.outHeight;
-
-            ExifInterface exif = new ExifInterface(fileImage);
-
-            int orientation = exif.getAttributeInt(
-                    ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_NORMAL);
-            int rotate = 0;
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    rotate = -90;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    rotate = 180;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    rotate = 90;
-                    break;
-            }
-
-            int what = w > l ? w : l;
-
-            Options options = new Options();
-            if (what > 3000) {
-                options.inSampleSize = scale * 6;
-            } else if (what > 2000 && what <= 3000) {
-                options.inSampleSize = scale * 5;
-            } else if (what > 1500 && what <= 2000) {
-                options.inSampleSize = scale * 4;
-            } else if (what > 1000 && what <= 1500) {
-                options.inSampleSize = scale * 3;
-            } else if (what > 400 && what <= 1000) {
-                options.inSampleSize = scale * 2;
-            } else {
-                options.inSampleSize = scale;
-            }
-
-            options.inJustDecodeBounds = false;
-
-            // TODO: Sometime the decode File Returns null for some images
-            // For such cases, thumbnails can't be created.
-            // Thumbnails will link to the original file
-            BufferedInputStream scaledInputStream = new BufferedInputStream(new FileInputStream(fileImage));
-            bitmap = BitmapFactory.decodeStream(scaledInputStream, null, options);
-//            verifyBitmap(fileImage, bitmap);
-            scaledInputStream.close();
-            if (bitmap == null) {
-                return fileImage;
-            }
-            File original = new File(fileImage);
-            File file = new File(
-                    (original.getParent() + File.separator + original.getName()
-                            .replace(".", "_fact_" + scale + ".")));
-            stream = new FileOutputStream(file);
-            if (rotate != 0) {
-                Matrix matrix = new Matrix();
-                matrix.setRotate(rotate);
-                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
-                        bitmap.getHeight(), matrix, false);
-            }
-
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-
-            return file.getAbsolutePath();
-
-        } catch (IOException e) {
-            return fileImage;
-//            throw new ChooserException(e);
-        } catch (Exception e) {
-            return fileImage;
-        } finally {
-            close(bstream);
-            flush(stream);
-            close(stream);
-        }
+        return fileImage;
+        
+//        FileOutputStream stream = null;
+//        BufferedInputStream bstream = null;
+//        Bitmap bitmap = null;
+//        try {
+//            Options optionsForGettingDimensions = new Options();
+//            optionsForGettingDimensions.inJustDecodeBounds = true;
+//            BufferedInputStream boundsOnlyStream = new BufferedInputStream(new FileInputStream(fileImage));
+//            bitmap = BitmapFactory.decodeStream(boundsOnlyStream, null, optionsForGettingDimensions);
+//            if (bitmap != null) {
+//                bitmap.recycle();
+//            }
+//            if (boundsOnlyStream != null) {
+//                boundsOnlyStream.close();
+//            }
+//            int w, l;
+//            w = optionsForGettingDimensions.outWidth;
+//            l = optionsForGettingDimensions.outHeight;
+//
+//            ExifInterface exif = new ExifInterface(fileImage);
+//
+//            int orientation = exif.getAttributeInt(
+//                    ExifInterface.TAG_ORIENTATION,
+//                    ExifInterface.ORIENTATION_NORMAL);
+//            int rotate = 0;
+//            switch (orientation) {
+//                case ExifInterface.ORIENTATION_ROTATE_270:
+//                    rotate = -90;
+//                    break;
+//                case ExifInterface.ORIENTATION_ROTATE_180:
+//                    rotate = 180;
+//                    break;
+//                case ExifInterface.ORIENTATION_ROTATE_90:
+//                    rotate = 90;
+//                    break;
+//            }
+//
+//            int what = w > l ? w : l;
+//
+//            Options options = new Options();
+//            if (what > 3000) {
+//                options.inSampleSize = scale * 6;
+//            } else if (what > 2000 && what <= 3000) {
+//                options.inSampleSize = scale * 5;
+//            } else if (what > 1500 && what <= 2000) {
+//                options.inSampleSize = scale * 4;
+//            } else if (what > 1000 && what <= 1500) {
+//                options.inSampleSize = scale * 3;
+//            } else if (what > 400 && what <= 1000) {
+//                options.inSampleSize = scale * 2;
+//            } else {
+//                options.inSampleSize = scale;
+//            }
+//
+//            options.inJustDecodeBounds = false;
+//
+//            // TODO: Sometime the decode File Returns null for some images
+//            // For such cases, thumbnails can't be created.
+//            // Thumbnails will link to the original file
+//            BufferedInputStream scaledInputStream = new BufferedInputStream(new FileInputStream(fileImage));
+//            bitmap = BitmapFactory.decodeStream(scaledInputStream, null, options);
+////            verifyBitmap(fileImage, bitmap);
+//            scaledInputStream.close();
+//            if (bitmap == null) {
+//                return fileImage;
+//            }
+//            File original = new File(fileImage);
+////            File file = new File(
+////                    (original.getParent() + File.separator + original.getName()
+////                            .replace(".", "_fact_" + scale + ".")));
+////            stream = new FileOutputStream(file);
+//            if (rotate != 0) {
+//                Matrix matrix = new Matrix();
+//                matrix.setRotate(rotate);
+//                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+//                        bitmap.getHeight(), matrix, false);
+//            }
+//
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+//
+//            return file.getAbsolutePath();
+//
+//        } catch (IOException e) {
+//            return fileImage;
+////            throw new ChooserException(e);
+//        } catch (Exception e) {
+//            return fileImage;
+//        } finally {
+//            close(bstream);
+//            flush(stream);
+//            close(stream);
+//        }
     }
 
     private String copyFileToDir(String filePath) throws ChooserException {

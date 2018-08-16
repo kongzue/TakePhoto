@@ -3,6 +3,8 @@ package com.kongzue.takephoto.util.imagechooser.api;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import static com.kongzue.takephoto.TakePhotoUtil.CACHE_FOLDER_NAME;
+
 /**
  * Preferences for ICL
  * Created by kbibek on 5/22/15.
@@ -27,7 +29,7 @@ public class BChooserPreferences {
     }
 
     public String getFolderName(){
-        return preferences.getString(FOLDER_NAME, "bichooser");
+        return preferences.getString(FOLDER_NAME, CACHE_FOLDER_NAME);
     }
 
 }

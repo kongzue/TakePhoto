@@ -2,10 +2,10 @@
 Kongzue APP拍照&相册选择工具
 
 <a href="https://github.com/kongzue/KongzueTakePhoto/">
-<img src="https://img.shields.io/badge/KongzueTakePhoto-2.0.1-green.svg" alt="Kongzue TakePhoto">
+<img src="https://img.shields.io/badge/KongzueTakePhoto-2.0.4-green.svg" alt="Kongzue TakePhoto">
 </a>
-<a href="https://bintray.com/myzchh/maven/TakePhoto/2.0.1/link">
-<img src="https://img.shields.io/badge/Maven-2.0.1-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/TakePhoto/2.0.4/link">
+<img src="https://img.shields.io/badge/Maven-2.0.4-blue.svg" alt="Maven">
 </a>
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="Maven">
@@ -23,14 +23,14 @@ Maven：
 <dependency>
   <groupId>com.kongzue.takephoto</groupId>
   <artifactId>takephoto</artifactId>
-  <version>2.0.1</version>
+  <version>2.0.4</version>
   <type>pom</type>
 </dependency>
 ```
 
 Gradle：
 ```
-implementation 'com.kongzue.takephoto:takephoto:2.0.1'
+implementation 'com.kongzue.takephoto:takephoto:2.0.4'
 ```
 
 ### 说明
@@ -110,6 +110,7 @@ TakePhotoUtil.getInstance(MainActivity.this).doOpenGallery();
 
 ```
 //初始化
+TakePhotoUtil.CACHE_FOLDER_NAME = ".TakePhotoCache";                //压缩框架：缓存图片文件夹名称
 TakePhotoUtil.DEFAULT_QUALITY = 90;                                 //压缩框架：图片质量
 TakePhotoUtil.DEFAULT_MAX_WIDTH = 1080;                             //压缩框架：图片最大宽度
 TakePhotoUtil.DEFAULT_MAX_HEIGHT = 1080;                            //压缩框架：图片最大高度
@@ -134,6 +135,15 @@ TakePhotoUtil.DEFAULT_PIC_TYPE = Bitmap.CompressFormat.JPEG;        //压缩框�
 ```
 
 ### 更新日志：
+v2.0.4：
+- 将拍照和选择图像的申请权限独立化，有助于仅使用单一功能的场景。
+
+v2.0.3：
+- 修复bug；
+
+v2.0.2：
+- 可通过 TakePhotoUtil.CACHE_FOLDER_NAME 修改缓存路径文件夹名称；
+
 v2.0.1：
 - 修复bug；
 
