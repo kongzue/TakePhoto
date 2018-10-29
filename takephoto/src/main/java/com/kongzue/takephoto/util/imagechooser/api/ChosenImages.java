@@ -24,4 +24,8 @@ public class ChosenImages {
     public ChosenImage getImage(int index){
         return images.get(index);
     }
+    
+    public List<ChosenImage> getImages() {
+        return images;
+    }
 }

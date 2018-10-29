@@ -37,6 +37,8 @@ public class TakePhotoUtil {
     
     public static String CACHE_FOLDER_NAME = ".TakePhotoCache";             //缓存文件夹名称
     
+    public static boolean COMPRESSED_PICS = true;       //是否压缩图片
+    public static boolean ALLOW_MULTIPLE = false;       //是否允许多选
     public static int DEFAULT_QUALITY = 80;             //图片质量
     public static int DEFAULT_MAX_WIDTH = 1080;         //图片最大宽度
     public static int DEFAULT_MAX_HEIGHT = 1080;        //图片最大高度
@@ -56,26 +58,22 @@ public class TakePhotoUtil {
     private static TakePhotoUtil takePhotoUtil;
     
     private TakePhotoUtil() {
+        cameraPermissions = new String[]{
+                Manifest.permission.CAMERA
+        };
+        
+        galleryPermissions = new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        };
     }
     
     public static TakePhotoUtil getInstance(AppCompatActivity appCompatActivity) {
         synchronized (TakePhotoUtil.class) {
             if (takePhotoUtil == null) takePhotoUtil = new TakePhotoUtil();
             takePhotoUtil.context = appCompatActivity;
-            takePhotoUtil.checkPermissions();
             return takePhotoUtil;
         }
-    }
-    
-    private void checkPermissions() {
-        cameraPermissions = new String[]{
-                Manifest.permission.CAMERA
-        };
-    
-        galleryPermissions = new String[]{
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-        };
     }
     
     private ImageChooserListener imageChooserListener = new ImageChooserListener() {
@@ -105,7 +103,7 @@ public class TakePhotoUtil {
             context.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                
+                    chooseImages(images);
                 }
             });
         }
@@ -118,23 +116,62 @@ public class TakePhotoUtil {
             public void run() {
                 originalFilePath = image.getFilePathOriginal();
                 if (image != null) {
-                    Log.i("选择图像", "Chosen Image:" + originalFilePath);
-                    
-                    File newFile = new CompressHelper.Builder(context)
-                            .setMaxWidth(DEFAULT_MAX_WIDTH)
-                            .setMaxHeight(DEFAULT_MAX_HEIGHT)
-                            .setQuality(DEFAULT_QUALITY)
-                            .setCompressFormat(DEFAULT_PIC_TYPE) // 设置默认压缩为jpg格式
-                            .setDestinationDirectoryPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + CACHE_FOLDER_NAME)
-                            .build()
-                            .compressToFile(new File(originalFilePath));
-                    String outfile = newFile.getAbsolutePath();
+                    String outfile = originalFilePath;
+                    if (COMPRESSED_PICS) {
+                        File newFile = new CompressHelper.Builder(context)
+                                .setMaxWidth(DEFAULT_MAX_WIDTH)
+                                .setMaxHeight(DEFAULT_MAX_HEIGHT)
+                                .setQuality(DEFAULT_QUALITY)
+                                .setCompressFormat(DEFAULT_PIC_TYPE) // 设置默认压缩为jpg格式
+                                .setDestinationDirectoryPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + CACHE_FOLDER_NAME)
+                                .build()
+                                .compressToFile(new File(originalFilePath));
+                        outfile = newFile.getAbsolutePath();
+                    }
                     log("outfile:" + outfile);
                     if (returnPhoto != null)
-                        returnPhoto.onGetPhoto(outfile, getBitmapFromUri(outfile));
+                        returnPhoto.onGetPhotos(new String[]{outfile});
                 } else {
                     Log.i("未选择图像", "Chosen Image: Is null");
                 }
+            }
+        });
+    }
+    
+    private void chooseImages(final ChosenImages chosenImages) {
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (chosenImages == null || chosenImages.getImages() == null || chosenImages.getImages().isEmpty()) {
+                    Log.i("未选择图像", "Chosen Image: Is null");
+                    return;
+                }
+                List<String> results = new ArrayList<>();
+                List<ChosenImage> images = chosenImages.getImages();
+                for (ChosenImage image : images) {
+                    originalFilePath = image.getFilePathOriginal();
+                    if (image != null) {
+                        String outfile = originalFilePath;
+                        if (COMPRESSED_PICS) {
+                            File newFile = new CompressHelper.Builder(context)
+                                    .setMaxWidth(DEFAULT_MAX_WIDTH)
+                                    .setMaxHeight(DEFAULT_MAX_HEIGHT)
+                                    .setQuality(DEFAULT_QUALITY)
+                                    .setCompressFormat(DEFAULT_PIC_TYPE) // 设置默认压缩为jpg格式
+                                    .setDestinationDirectoryPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + CACHE_FOLDER_NAME)
+                                    .build()
+                                    .compressToFile(new File(originalFilePath));
+                            outfile = newFile.getAbsolutePath();
+                        }
+                        results.add(outfile);
+                    }
+                }
+                String[] resultStrs = new String[results.size()];
+                for (int i = 0; i < results.size(); i++) {
+                    resultStrs[i] = results.get(i);
+                }
+                if (returnPhoto != null)
+                    returnPhoto.onGetPhotos(resultStrs);
             }
         });
     }
@@ -155,7 +192,7 @@ public class TakePhotoUtil {
         }
     }
     
-    private Bitmap getBitmapFromUri(String outfile) {
+    public Bitmap getBitmapFromUri(String outfile) {
         try {
             outfile = outfile.replace("/storage/emulated/0/", "file:///sdcard/");
             Uri uri = Uri.parse(outfile);
@@ -194,7 +231,7 @@ public class TakePhotoUtil {
                 log("doOpenCamera：无法创建照片文件，请检查权限设置");
             }
         } else {
-            Log.i("Error","权限未处理，请确保已申请权限：Manifest.permission.CAMERA");
+            Log.i("Error", "权限未处理，请确保已申请权限：Manifest.permission.CAMERA");
             requestPermission(cameraPermissions, 0x0001);
         }
     }
@@ -204,23 +241,24 @@ public class TakePhotoUtil {
             case CODE_TAKE_PICTURE:
                 log("resultCode:" + resultCode);
                 if (resultCode == RESULT_OK) {
-//                    log(">>>拍照：" + imageUri);
                     try {
-                        
-                        File newFile = new CompressHelper.Builder(context)
-                                .setMaxWidth(DEFAULT_MAX_WIDTH)
-                                .setMaxHeight(DEFAULT_MAX_HEIGHT)
-                                .setQuality(DEFAULT_QUALITY)
-                                .setCompressFormat(DEFAULT_PIC_TYPE)
-                                .setDestinationDirectoryPath(Environment.getExternalStoragePublicDirectory(
-                                        Environment.DIRECTORY_PICTURES).getAbsolutePath())
-                                .build()
-                                .compressToFile(mTmpFile);
-                        String outfile = newFile.getAbsolutePath();
+                        String outfile = mTmpFile.getAbsolutePath();
+                        if (COMPRESSED_PICS) {
+                            File newFile = new CompressHelper.Builder(context)
+                                    .setMaxWidth(DEFAULT_MAX_WIDTH)
+                                    .setMaxHeight(DEFAULT_MAX_HEIGHT)
+                                    .setQuality(DEFAULT_QUALITY)
+                                    .setCompressFormat(DEFAULT_PIC_TYPE)
+                                    .setDestinationDirectoryPath(Environment.getExternalStoragePublicDirectory(
+                                            Environment.DIRECTORY_PICTURES).getAbsolutePath())
+                                    .build()
+                                    .compressToFile(mTmpFile);
+                            outfile = newFile.getAbsolutePath();
+                        }
                         
                         log("outfile:" + outfile);
                         if (returnPhoto != null)
-                            returnPhoto.onGetPhoto(outfile, getBitmapFromUri(outfile));
+                            returnPhoto.onGetPhotos(new String[]{outfile});
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -244,7 +282,7 @@ public class TakePhotoUtil {
     private void reinitializeImageChooser() {
         imageChooserManager = new ImageChooserManager(context, chooserType, true);
         Bundle bundle = new Bundle();
-        bundle.putBoolean(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        bundle.putBoolean(Intent.EXTRA_ALLOW_MULTIPLE, ALLOW_MULTIPLE);
         imageChooserManager.setExtras(bundle);
         imageChooserManager.setImageChooserListener(imageChooserListener);
         imageChooserManager.reinitialize(filePath);
@@ -258,7 +296,7 @@ public class TakePhotoUtil {
                                                           ChooserType.REQUEST_PICK_PICTURE, true
             );
             Bundle bundle = new Bundle();
-            bundle.putBoolean(Intent.EXTRA_ALLOW_MULTIPLE, false);
+            bundle.putBoolean(Intent.EXTRA_ALLOW_MULTIPLE, ALLOW_MULTIPLE);
             imageChooserManager.setExtras(bundle);
             imageChooserManager.setImageChooserListener(imageChooserListener);
             imageChooserManager.clearOldFiles();
@@ -270,7 +308,7 @@ public class TakePhotoUtil {
                 e.printStackTrace();
             }
         } else {
-            Log.i("Error","权限未处理，请确保已申请权限：Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE");
+            Log.i("Error", "权限未处理，请确保已申请权限：Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE");
             requestPermission(galleryPermissions, 0x0001);
         }
     }
@@ -329,7 +367,7 @@ public class TakePhotoUtil {
     }
     
     public interface ReturnPhoto {
-        void onGetPhoto(String path, Bitmap bitmap);
+        void onGetPhotos(String[] selectImagePaths);
         
         void onError(Exception e);
     }
