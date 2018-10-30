@@ -43,11 +43,11 @@ import java.util.ArrayList;
  */
 public class ImageChooserManager extends BChooser implements
         ImageProcessorListener {
-
+    
     private final static String TAG = ImageChooserManager.class.getSimpleName();
-
+    
     private ImageChooserListener listener;
-
+    
     /**
      * Simplest constructor. Specify the type
      * {@link ChooserType}
@@ -58,7 +58,7 @@ public class ImageChooserManager extends BChooser implements
     public ImageChooserManager(Activity activity, int type) {
         super(activity, type, true);
     }
-
+    
     /**
      * Simple constructor for using with a fragment from the support library
      *
@@ -68,7 +68,7 @@ public class ImageChooserManager extends BChooser implements
     public ImageChooserManager(Fragment fragment, int type) {
         super(fragment, type, true);
     }
-
+    
     /**
      * Simple constructor for using with a fragment
      *
@@ -78,7 +78,7 @@ public class ImageChooserManager extends BChooser implements
     public ImageChooserManager(android.app.Fragment fragment, int type) {
         super(fragment, type, true);
     }
-
+    
     /**
      * Specify the type {@link ChooserType}
      * <p>
@@ -95,7 +95,7 @@ public class ImageChooserManager extends BChooser implements
     public ImageChooserManager(Activity activity, int type, String folderName) {
         super(activity, type, folderName, true);
     }
-
+    
     /**
      * @param fragment
      * @param type
@@ -106,7 +106,7 @@ public class ImageChooserManager extends BChooser implements
     public ImageChooserManager(Fragment fragment, int type, String folderName) {
         super(fragment, type, folderName, true);
     }
-
+    
     /**
      * @param fragment
      * @param type
@@ -118,7 +118,7 @@ public class ImageChooserManager extends BChooser implements
                                String folderName) {
         super(fragment, type, folderName, true);
     }
-
+    
     /**
      * Specify the type {@link ChooserType}
      * <p>
@@ -134,17 +134,17 @@ public class ImageChooserManager extends BChooser implements
                                boolean shouldCreateThumbnails) {
         super(activity, type, shouldCreateThumbnails);
     }
-
+    
     public ImageChooserManager(Fragment fragment, int type,
                                boolean shouldCreateThumbnails) {
         super(fragment, type, shouldCreateThumbnails);
     }
-
+    
     public ImageChooserManager(android.app.Fragment fragment, int type,
                                boolean shouldCreateThumbnails) {
         super(fragment, type, shouldCreateThumbnails);
     }
-
+    
     /**
      * Specify the type {@link ChooserType}
      * <p>
@@ -163,7 +163,7 @@ public class ImageChooserManager extends BChooser implements
                                boolean shouldCreateThumbnails) {
         super(activity, type, foldername, shouldCreateThumbnails);
     }
-
+    
     /**
      * @param fragment
      * @param type
@@ -176,7 +176,7 @@ public class ImageChooserManager extends BChooser implements
                                boolean shouldCreateThumbnails) {
         super(fragment, type, foldername, shouldCreateThumbnails);
     }
-
+    
     /**
      * @param fragment
      * @param type
@@ -189,7 +189,7 @@ public class ImageChooserManager extends BChooser implements
                                String foldername, boolean shouldCreateThumbnails) {
         super(fragment, type, foldername, shouldCreateThumbnails);
     }
-
+    
     /**
      * Set a listener, to get callbacks when the images and the thumbnails are
      * processed
@@ -199,7 +199,7 @@ public class ImageChooserManager extends BChooser implements
     public void setImageChooserListener(ImageChooserListener listener) {
         this.listener = listener;
     }
-
+    
     @Override
     public String choose() throws ChooserException {
         String path = null;
@@ -220,7 +220,7 @@ public class ImageChooserManager extends BChooser implements
         }
         return path;
     }
-
+    
     private void choosePicture() throws ChooserException {
         checkDirectory();
         try {
@@ -236,7 +236,7 @@ public class ImageChooserManager extends BChooser implements
             throw new ChooserException(e);
         }
     }
-
+    
     private String takePicture() throws ChooserException {
         checkDirectory();
         try {
@@ -252,7 +252,7 @@ public class ImageChooserManager extends BChooser implements
         }
         return filePathOriginal;
     }
-
+    
     @Override
     public void submit(int requestCode, Intent data) {
         try {
@@ -272,76 +272,82 @@ public class ImageChooserManager extends BChooser implements
             onError(e.getMessage());
         }
     }
-
+    
     @SuppressLint("NewApi")
     private void processImageFromGallery(Intent data) {
-        if (data != null && data.getDataString() != null) {
-            String uri = data.getData().toString();
-            sanitizeURI(uri);
-
-            if (filePathOriginal == null || TextUtils.isEmpty(filePathOriginal)) {
-                onError("File path was null");
-            } else {
-                String path = filePathOriginal;
-                ImageProcessorThread thread = new ImageProcessorThread(path,
-                        foldername, shouldCreateThumbnails);
+        if (data != null) {
+            if (data.getClipData() != null || data.hasExtra("uris")) {
+                // Multiple Images
+                String[] filePaths;
+                if (data.hasExtra("uris")) {
+                    ArrayList<Uri> uris = data.getParcelableArrayListExtra("uris");
+                    filePaths = new String[uris.size()];
+                    for (int i = 0; i < uris.size(); i++) {
+                        filePaths[i] = uris.get(i).toString();
+                    }
+                } else {
+                    ClipData clipData = data.getClipData();
+                    int count = clipData.getItemCount();
+                    filePaths = new String[count];
+                    for (int i = 0; i < count; i++) {
+                        ClipData.Item item = clipData.getItemAt(i);
+                        Log.i(TAG, "processImageFromGallery: Item: " + item.getUri());
+                        filePaths[i] = item.getUri().toString();
+                    }
+                }
+                ImageProcessorThread thread = new ImageProcessorThread(filePaths, foldername, shouldCreateThumbnails);
                 thread.clearOldFiles(clearOldFiles);
                 thread.setListener(this);
                 thread.setContext(getContext());
                 thread.start();
-            }
-        } else if (data.getClipData() != null || data.hasExtra("uris")) {
-            // Multiple Images
-            String[] filePaths;
-            if (data.hasExtra("uris")) {
-                ArrayList<Uri> uris = data.getParcelableArrayListExtra("uris");
-                filePaths = new String[uris.size()];
-                for (int i = 0; i < uris.size(); i++) {
-                    filePaths[i] = uris.get(i).toString();
+            } else if (data.getDataString() != null) {
+                String uri = data.getData().toString();
+                sanitizeURI(uri);
+                
+                if (filePathOriginal == null || TextUtils.isEmpty(filePathOriginal)) {
+                    onError("File path was null");
+                } else {
+                    String path = filePathOriginal;
+                    ImageProcessorThread thread = new ImageProcessorThread(path,
+                                                                           foldername, shouldCreateThumbnails
+                    );
+                    thread.clearOldFiles(clearOldFiles);
+                    thread.setListener(this);
+                    thread.setContext(getContext());
+                    thread.start();
                 }
             } else {
-                ClipData clipData = data.getClipData();
-                int count = clipData.getItemCount();
-                filePaths = new String[count];
-                for (int i = 0; i < count; i++) {
-                    ClipData.Item item = clipData.getItemAt(i);
-                    Log.i(TAG, "processImageFromGallery: Item: " + item.getUri());
-                    filePaths[i] = item.getUri().toString();
-                }
+                Log.i(">>>", "processImageFromGallery: 3");
+                onError("Image Uri was null!");
             }
-            ImageProcessorThread thread = new ImageProcessorThread(filePaths, foldername, shouldCreateThumbnails);
-            thread.clearOldFiles(clearOldFiles);
-            thread.setListener(this);
-            thread.setContext(getContext());
-            thread.start();
-//        } else if () {
         } else {
             onError("Image Uri was null!");
         }
     }
-
+    
     private void processCameraImage() {
         String path = filePathOriginal;
         ImageProcessorThread thread = new ImageProcessorThread(path,
-                foldername, shouldCreateThumbnails);
+                                                               foldername, shouldCreateThumbnails
+        );
         thread.setListener(this);
         thread.start();
     }
-
+    
     @Override
     public void onProcessedImage(ChosenImage image) {
         if (listener != null) {
             listener.onImageChosen(image);
         }
     }
-
+    
     @Override
     public void onError(String reason) {
         if (listener != null) {
             listener.onError(reason);
         }
     }
-
+    
     @Override
     public void onProcessedImages(ChosenImages images) {
         if (listener != null) {

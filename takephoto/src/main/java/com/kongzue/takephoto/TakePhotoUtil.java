@@ -280,6 +280,7 @@ public class TakePhotoUtil {
     }
     
     private void reinitializeImageChooser() {
+        chooserType = ChooserType.REQUEST_PICK_PICTURE;
         imageChooserManager = new ImageChooserManager(context, chooserType, true);
         Bundle bundle = new Bundle();
         bundle.putBoolean(Intent.EXTRA_ALLOW_MULTIPLE, ALLOW_MULTIPLE);
@@ -291,10 +292,7 @@ public class TakePhotoUtil {
     //相册
     public void doOpenGallery() {
         if (checkPermissions(galleryPermissions)) {
-            chooserType = ChooserType.REQUEST_PICK_PICTURE;
-            imageChooserManager = new ImageChooserManager(context,
-                                                          ChooserType.REQUEST_PICK_PICTURE, true
-            );
+            imageChooserManager = new ImageChooserManager(context, ChooserType.REQUEST_PICK_PICTURE, true);
             Bundle bundle = new Bundle();
             bundle.putBoolean(Intent.EXTRA_ALLOW_MULTIPLE, ALLOW_MULTIPLE);
             imageChooserManager.setExtras(bundle);
