@@ -2,10 +2,10 @@
 Kongzue APP拍照&相册选择工具
 
 <a href="https://github.com/kongzue/KongzueTakePhoto/">
-<img src="https://img.shields.io/badge/KongzueTakePhoto-2.0.6-green.svg" alt="Kongzue TakePhoto">
+<img src="https://img.shields.io/badge/KongzueTakePhoto-2.0.7-green.svg" alt="Kongzue TakePhoto">
 </a>
-<a href="https://bintray.com/myzchh/maven/TakePhoto/2.0.6/link">
-<img src="https://img.shields.io/badge/Maven-2.0.6-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/TakePhoto/2.0.7/link">
+<img src="https://img.shields.io/badge/Maven-2.0.7-blue.svg" alt="Maven">
 </a>
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="Maven">
@@ -23,14 +23,14 @@ Maven：
 <dependency>
   <groupId>com.kongzue.takephoto</groupId>
   <artifactId>takephoto</artifactId>
-  <version>2.0.6</version>
+  <version>2.0.7</version>
   <type>pom</type>
 </dependency>
 ```
 
 Gradle：
 ```
-implementation 'com.kongzue.takephoto:takephoto:2.0.6'
+implementation 'com.kongzue.takephoto:takephoto:2.0.7'
 ```
 
 ### 说明
