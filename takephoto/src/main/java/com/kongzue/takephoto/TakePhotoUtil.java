@@ -126,7 +126,9 @@ public class TakePhotoUtil {
                                 .setDestinationDirectoryPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + CACHE_FOLDER_NAME)
                                 .build()
                                 .compressToFile(new File(originalFilePath));
-                        outfile = newFile.getAbsolutePath();
+                        if (newFile != null) {
+                            outfile = newFile.getAbsolutePath();
+                        }
                     }
                     log("outfile:" + outfile);
                     if (returnPhoto != null)
@@ -161,7 +163,9 @@ public class TakePhotoUtil {
                                     .setDestinationDirectoryPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + CACHE_FOLDER_NAME)
                                     .build()
                                     .compressToFile(new File(originalFilePath));
-                            outfile = newFile.getAbsolutePath();
+                            if (newFile != null) {
+                                outfile = newFile.getAbsolutePath();
+                            }
                         }
                         results.add(outfile);
                     }
