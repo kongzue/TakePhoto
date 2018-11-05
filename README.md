@@ -2,10 +2,10 @@
 Kongzue APP拍照&相册选择工具
 
 <a href="https://github.com/kongzue/KongzueTakePhoto/">
-<img src="https://img.shields.io/badge/KongzueTakePhoto-2.0.7-green.svg" alt="Kongzue TakePhoto">
+<img src="https://img.shields.io/badge/KongzueTakePhoto-2.0.8-green.svg" alt="Kongzue TakePhoto">
 </a>
-<a href="https://bintray.com/myzchh/maven/TakePhoto/2.0.7/link">
-<img src="https://img.shields.io/badge/Maven-2.0.7-blue.svg" alt="Maven">
+<a href="https://bintray.com/myzchh/maven/TakePhoto/2.0.8/link">
+<img src="https://img.shields.io/badge/Maven-2.0.8-blue.svg" alt="Maven">
 </a>
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="Maven">
@@ -23,14 +23,14 @@ Maven：
 <dependency>
   <groupId>com.kongzue.takephoto</groupId>
   <artifactId>takephoto</artifactId>
-  <version>2.0.7</version>
+  <version>2.0.8</version>
   <type>pom</type>
 </dependency>
 ```
 
 Gradle：
 ```
-implementation 'com.kongzue.takephoto:takephoto:2.0.7'
+implementation 'com.kongzue.takephoto:takephoto:2.0.8'
 ```
 
 ### 说明
@@ -142,6 +142,9 @@ limitations under the License.
 ```
 
 ### 更新日志：
+v2.0.8：
+- 针对部分机器压缩时崩溃问题（路径冲突的问题）进行修复；
+
 v2.0.7：
 - 针对部分华为手机压缩图像内存溢出的问题，在发生溢出时直接返回原图；
 

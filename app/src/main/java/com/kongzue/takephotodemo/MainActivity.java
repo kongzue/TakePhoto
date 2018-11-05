@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         txtPath = findViewById(R.id.txtPath);
         
         //初始化
-        TakePhotoUtil.ALLOW_MULTIPLE = true;                               //是否允许多选图片
+        TakePhotoUtil.ALLOW_MULTIPLE = false;                               //是否允许多选图片
         TakePhotoUtil.COMPRESSED_PICS = true;                               //是否开启压缩
         TakePhotoUtil.DEFAULT_QUALITY = 90;                                 //压缩框架：图片质量
         TakePhotoUtil.DEFAULT_MAX_WIDTH = 1080;                             //压缩框架：图片最大宽度

@@ -124,6 +124,7 @@ public class TakePhotoUtil {
                                 .setQuality(DEFAULT_QUALITY)
                                 .setCompressFormat(DEFAULT_PIC_TYPE) // 设置默认压缩为jpg格式
                                 .setDestinationDirectoryPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + CACHE_FOLDER_NAME)
+                                .setFileNamePrefix("temp_")
                                 .build()
                                 .compressToFile(new File(originalFilePath));
                         if (newFile != null) {
@@ -161,6 +162,7 @@ public class TakePhotoUtil {
                                     .setQuality(DEFAULT_QUALITY)
                                     .setCompressFormat(DEFAULT_PIC_TYPE) // 设置默认压缩为jpg格式
                                     .setDestinationDirectoryPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + CACHE_FOLDER_NAME)
+                                    .setFileNamePrefix("temp_")
                                     .build()
                                     .compressToFile(new File(originalFilePath));
                             if (newFile != null) {
