@@ -59,7 +59,9 @@ public class TakePhotoUtil {
     
     private TakePhotoUtil() {
         cameraPermissions = new String[]{
-                Manifest.permission.CAMERA
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
         };
         
         galleryPermissions = new String[]{

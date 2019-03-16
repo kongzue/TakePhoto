@@ -6,14 +6,14 @@ def siteUrl = 'https://github.com/kongzue/TakePhoto' //项目在github主页地�
 def gitUrl = 'https://github.com/kongzue/TakePhoto.git'   //Git仓库的地址
 
 group = "com.kongzue.takephoto"//发布aar前缀根节点
-version = "2.0.8"//发布aar的库版本
+version = "2.0.9"//发布aar的库版本
 android {
     compileSdkVersion 27
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 10
-        versionName "2.0.8"
+        versionCode 11
+        versionName "2.0.9"
     }
 
     buildTypes {
