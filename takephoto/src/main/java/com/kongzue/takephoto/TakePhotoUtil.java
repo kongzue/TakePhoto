@@ -55,7 +55,6 @@ public class TakePhotoUtil {
     private String filePath;
     private String originalFilePath;
     
-    private static TakePhotoUtil takePhotoUtil;
     
     private TakePhotoUtil() {
         cameraPermissions = new String[]{
@@ -70,9 +69,23 @@ public class TakePhotoUtil {
         };
     }
     
+    @Deprecated
+    private static TakePhotoUtil takePhotoUtil;
+    
+    @Deprecated
     public static TakePhotoUtil getInstance(AppCompatActivity appCompatActivity) {
         synchronized (TakePhotoUtil.class) {
-            if (takePhotoUtil == null) takePhotoUtil = new TakePhotoUtil();
+            if (takePhotoUtil == null) {
+                takePhotoUtil = new TakePhotoUtil();
+            }
+            takePhotoUtil.context = appCompatActivity;
+            return takePhotoUtil;
+        }
+    }
+    
+    public static TakePhotoUtil init(AppCompatActivity appCompatActivity) {
+        synchronized (TakePhotoUtil.class) {
+            TakePhotoUtil takePhotoUtil = new TakePhotoUtil();
             takePhotoUtil.context = appCompatActivity;
             return takePhotoUtil;
         }
@@ -134,8 +147,9 @@ public class TakePhotoUtil {
                         }
                     }
                     log("outfile:" + outfile);
-                    if (returnPhoto != null)
+                    if (returnPhoto != null) {
                         returnPhoto.onGetPhotos(new String[]{outfile});
+                    }
                 } else {
                     Log.i("未选择图像", "Chosen Image: Is null");
                 }
@@ -178,8 +192,9 @@ public class TakePhotoUtil {
                 for (int i = 0; i < results.size(); i++) {
                     resultStrs[i] = results.get(i);
                 }
-                if (returnPhoto != null)
+                if (returnPhoto != null) {
                     returnPhoto.onGetPhotos(resultStrs);
+                }
             }
         });
     }
@@ -200,9 +215,9 @@ public class TakePhotoUtil {
         }
     }
     
-    public Bitmap getBitmapFromUri(String outfile) {
+    public static Bitmap getBitmapFromUri(Context context, String outfile) {
         try {
-            outfile = outfile.replace("/storage/emulated/0/", "file:///sdcard/");
+            outfile = outfile.replace(Environment.getExternalStorageDirectory().getAbsolutePath(), "file:///sdcard/");
             Uri uri = Uri.parse(outfile);
             // 读取uri所在的图片
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);

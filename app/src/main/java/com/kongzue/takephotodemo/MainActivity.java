@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             
             @Override
             public void onGetPhotos(String[] selectImagePaths) {
-                imgPhoto.setImageBitmap(TakePhotoUtil.getInstance(MainActivity.this).getBitmapFromUri(selectImagePaths[0]));
+                imgPhoto.setImageBitmap(TakePhotoUtil.getBitmapFromUri(MainActivity.this,selectImagePaths[0]));
                 txtPath.setText(selectImagePaths[0]);
                 
                 Log.i(">>>", "onGetPhotos: ====================");
